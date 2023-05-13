@@ -30,7 +30,7 @@ fn register(user_manager: &mut UserManager) {
 }
 
 fn login(app: &mut CoronaApplication) {
-    let username = read_line("Username: ");
+    let username = read_line("Username : ");
     let password = read_line("Password: ");
 
     if let Some(user) = app.user_manager.user_login_mut(username, password) {
