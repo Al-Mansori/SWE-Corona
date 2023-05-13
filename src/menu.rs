@@ -113,7 +113,7 @@ fn pay(user: &User, order_manager: &mut OrderManager) {
     if let Some(order) = order_manager
         .orders_mut()
         .iter_mut()
-        .find(move |order| order.order_id() == order_id)
+        .find(move |order| order.order_id() == order_id && order.username() == user.username())
     {
         order.view();
         let total_price = order.total_price();
