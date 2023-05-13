@@ -1,6 +1,14 @@
 use crate::{model::*, view::*};
 use std::{io::Write, str::FromStr};
 
+/// Reads a line from stdin with the given prompt
+///
+/// This function is similar to the [`input()`](https://docs.python.org/3/library/functions.html#input) function in python.
+///
+/// The following example asks the use for their name
+/// ```rust
+/// let line = read_line("Name: ");
+/// ```
 fn read_line(prompt: &str) -> String {
     print!("{prompt}");
     std::io::stdout().flush().ok();
@@ -11,6 +19,14 @@ fn read_line(prompt: &str) -> String {
     line
 }
 
+/// Reads a line from stdin and parses it to type `T` with the given prompt
+///
+/// If parsing fails the prompt is repeated until a valid value is passed in.
+///
+/// The following example asks the user for their age
+/// ```rust
+/// let age: u64 = read_value("Age: ");
+/// ```
 fn read_value<T: FromStr>(prompt: &str) -> T {
     loop {
         if let Ok(result) = read_line(prompt).parse() {
@@ -19,6 +35,11 @@ fn read_value<T: FromStr>(prompt: &str) -> T {
     }
 }
 
+/// Display the register user menu.
+///
+/// Asks the user for their username, password and email and creates the user.
+///
+/// If creating the user failed an error is printed to stdout.
 fn register(user_manager: &mut UserManager) {
     let username = read_line("Username: ");
     let password = read_line("Password: ");
@@ -29,6 +50,13 @@ fn register(user_manager: &mut UserManager) {
     }
 }
 
+/// Display the login menu.
+///
+/// Asks the user for their username and password and searches in the list of usernames and
+/// password for a user with these credentials.
+///
+/// If the user is found, they are logged in and get a new menu,
+/// otherwise an error is printed to stdout.
 fn login(app: &mut CoronaApplication) {
     let username = read_line("Username: ");
     let password = read_line("Password: ");
@@ -40,6 +68,7 @@ fn login(app: &mut CoronaApplication) {
     }
 }
 
+/// Asks user to add item to the catalog.
 fn product_add(catalog: &mut Catalog) {
     let code = read_line("Code: ");
     let name = read_line("Name: ");
@@ -48,11 +77,13 @@ fn product_add(catalog: &mut Catalog) {
     catalog.add_product(Product::new(code, name, unit_price));
 }
 
+/// Asks user to remove item from the catalog.
 fn product_remove(catalog: &mut Catalog) {
     let code = read_line("Code: ");
     catalog.remove_product(&code);
 }
 
+/// Asks user to add item to the cart.
 fn cart_add(user: &mut User, catalog: &mut Catalog) {
     let item_index: usize = read_value("Item Index: ");
     if let Some(product) = catalog.products().get(item_index - 1) {
@@ -64,16 +95,19 @@ fn cart_add(user: &mut User, catalog: &mut Catalog) {
     }
 }
 
+/// Asks user to remove item from the cart.
 fn cart_remove(user: &mut User) {
     let code = read_line("Code: ");
     user.cart_mut().remove_item(&code);
 }
 
+/// Display options to create an order.
 fn checkout(user: &mut User, order_manager: &mut OrderManager) {
     let delivery_address = read_line("Delivery address: ");
     order_manager.checkout(user, delivery_address).view();
 }
 
+/// Asks user for how to pay and closes order.
 fn pay(user: &User, order_manager: &mut OrderManager) {
     let order_id = read_value("Order ID: ");
     if let Some(order) = order_manager
@@ -125,6 +159,7 @@ fn pay(user: &User, order_manager: &mut OrderManager) {
     }
 }
 
+/// Lists orders for current user.
 fn list_orders_for_user(order_manager: &OrderManager, user: &User) {
     order_manager
         .orders()
@@ -133,6 +168,7 @@ fn list_orders_for_user(order_manager: &OrderManager, user: &User) {
         .for_each(View::view);
 }
 
+/// Menu for logged in users.
 fn logged_in_menu(user: &mut User, catalog: &mut Catalog, order_manager: &mut OrderManager) {
     let prompt = format!("({}) >>> ", user.username());
     loop {
@@ -156,6 +192,7 @@ fn logged_in_menu(user: &mut User, catalog: &mut Catalog, order_manager: &mut Or
     }
 }
 
+/// Menu for users not logged in.
 pub(crate) fn main(app: &mut CoronaApplication) {
     loop {
         match read_line(">>> ").as_str() {

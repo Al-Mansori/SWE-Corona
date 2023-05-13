@@ -1,6 +1,8 @@
 use crate::model::*;
 
+/// Prettry print the class to the user.
 pub(crate) trait View {
+    /// Prettry print the class to the user.
     fn view(&self);
 }
 
