@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-mod menu;
+mod menu; 
 mod model;
 mod view;
 
