@@ -58,7 +58,7 @@ fn register(user_manager: &mut UserManager) {
 /// If the user is found, they are logged in and get a new menu,
 /// otherwise an error is printed to stdout.
 fn login(app: &mut CoronaApplication) {
-    let username = read_line("Username: ");
+    let username = read_line("Username : ");
     let password = read_line("Password: ");
 
     if let Some(user) = app.user_manager.user_login_mut(username, password) {
