@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 /// All functions related to user input / user output
 mod menu;
 

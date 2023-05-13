@@ -62,10 +62,6 @@ impl OrderItem {
         self.quantity
     }
 
-    pub(crate) fn unit_price(&self) -> f64 {
-        self.product.unit_price()
-    }
-
     pub(crate) fn total_price(&self) -> f64 {
         self.quantity * self.product.unit_price()
     }
@@ -221,10 +217,6 @@ pub(crate) struct User {
 impl User {
     pub(crate) fn username(&self) -> &str {
         self.username.as_ref()
-    }
-
-    pub(crate) fn email(&self) -> &str {
-        self.email.as_ref()
     }
 
     pub(crate) fn cart(&self) -> &Cart {
